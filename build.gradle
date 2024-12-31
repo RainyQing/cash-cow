@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '1.13.3'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group 'com.leeks.bobo'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://maven.aliyun.com/repository/google' }
+
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    //https://github.com/alibaba/fastjson
+    implementation 'com.alibaba:fastjson:2.0.28'
+
+    // https://github.com/square/okhttp 引入来兼容 Android Studio, 用普通 http -1M
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+//    version = '2024.2.3'
+    localPath = '/Applications/IntelliJ IDEA CE.app/Contents/'
+//    localPath.set('D:\\tool\\dev\\IntelliJ IDEA')
+    intellij.setUpdateSinceUntilBuild(true)
+    intellij.setSameSinceUntilBuild(false)
+}
+patchPluginXml {
+    changeNotes.set("""
+        v1.0 韭皇驾到，通通闪开
+              """)
+    sinceBuild.set('233.*')
+    untilBuild.set(null)
+}
+
+buildSearchableOptions.enabled = false
+kotlin {
+    jvmToolchain(17)
+}

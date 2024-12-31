@@ -1,0 +1,23 @@
+<idea-plugin>
+    <id>com.leeks.bobo</id>
+    <name>BoBo_Leeks</name>
+
+    <description><![CDATA[
+        韭皇驾到，通通闪开<br>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <toolWindow anchor="bottom" id="leeks" factoryClass="StockWindow"/>
+        <applicationConfigurable id="leeks_settings" instance="SettingsWindow" displayName="Leeks"/>
+        <notificationGroup id="Leeks Notification Group" displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

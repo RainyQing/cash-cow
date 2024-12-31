@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="SettingsWindow">
+  <grid id="27dc6" binding="settingsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+    <constraints>
+      <xy x="20" y="20" width="1004" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="fc227" class="javax.swing.JCheckBox" binding="pinyinModeCheckBox">
+        <constraints/>
+        <properties>
+          <horizontalAlignment value="2"/>
+          <horizontalTextPosition value="2"/>
+          <text value="启用拼音模式"/>
+          <toolTipText value="暂未启用"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
