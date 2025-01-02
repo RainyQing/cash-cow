@@ -208,7 +208,6 @@ class SearchHelper(
     }
 
     private suspend fun search(keywords: String?) {
-        println("leek, search=$keywords")
         if (keywords.isNullOrEmpty() || keywords.isEmpty()) {
             updateSearchResult(null)
             return
@@ -217,9 +216,6 @@ class SearchHelper(
         val path = Urls.search + keywords
 
         val httpResult = path.httpGet() ?: return
-
-        println("leek, search.result=$httpResult")
-
         val searchResult = try {
             JSON.parseObject(httpResult, SearchResult::class.java)
         } catch (e: Exception) {

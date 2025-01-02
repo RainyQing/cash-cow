@@ -53,15 +53,7 @@ class StockWindow : ToolWindowFactory {
     private val searchDialog by lazy {
         SearchHelper {
             stockTableModel.addStock(it)
-            if (it.now.isEmpty()) {
-                if (fetcherJob?.isActive == true) {
-                    startRefreshStockData()
-                } else {
-                    scope.launch {
-                        doRefreshStockData(listOf(it))
-                    }
-                }
-            }
+            startRefreshStockData()
         }
     }
 
@@ -191,8 +183,7 @@ class StockWindow : ToolWindowFactory {
     }
 
     private fun startRefreshStockData() {
-        val stocks = PropertiesComponent.getInstance().getStockConfig()
-        if (stocks.isEmpty()) {
+        if (stockTableModel.tableData.isEmpty()) {
             stopRefreshStockData()
         } else {
             if (fetcherJob?.isActive == true) {
@@ -200,8 +191,8 @@ class StockWindow : ToolWindowFactory {
             }
 
             fetcherJob = scope.launch {
-                while (isActive) {
-                    doRefreshStockData(stocks)
+                while (isActive && stockTableModel.tableData.isNotEmpty()) {
+                    doRefreshStockData(stockTableModel.tableData)
                     if (LocalTime.now().isAfter(LocalTime.of(15, 0))) {
                         return@launch
                     }

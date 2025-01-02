@@ -7,11 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.awt.Point
 
-/**
- * 存放【编码】的位置，更新数据时用到
- */
-var StockCodeColumnIdx: Int = 0
-
 val AppScope = CoroutineScope(Dispatchers.Default + Job())
 private var followedStocks = listOf<Stock>()
 
