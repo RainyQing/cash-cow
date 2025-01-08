@@ -21,6 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import popMenu.StocksMenu
 import search.SearchHelper
+import stockTable.StockRowRender
 import stockTable.StockTableModel
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
@@ -36,6 +37,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 import javax.swing.border.EmptyBorder
+import javax.swing.table.TableCellRenderer
 
 class StockWindow : ToolWindowFactory {
 
@@ -93,6 +95,7 @@ class StockWindow : ToolWindowFactory {
         }
 
         table = JBTable(stockTableModel)
+        table.setDefaultRenderer(Any::class.java, StockRowRender(stockTableModel))
 
         refreshTimeLabel = JLabel()
         refreshTimeLabel.toolTipText = "刷新时间"
@@ -129,27 +132,23 @@ class StockWindow : ToolWindowFactory {
         })
         table.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(e: MouseEvent) {
-                if (table.selectedRow !in stockTableModel.tableData.indices) {
-                    return
-                }
-
-                val selectedStock = stockTableModel.tableData[table.selectedRow]
-
                 val clickLocation = Point(e.xOnScreen, e.yOnScreen)
                 if (e.clickCount == 2) {
+                    val selectedStock = stockTableModel.tableData[table.selectedRow]
                     PropertiesComponent.getInstance()
                         .getStockConfig()
                         .find { it.code == selectedStock.code }
                         ?.showEditBondsDialog({ stockTableModel.updateStock(it) }, clickLocation)
                 } else if (SwingUtilities.isRightMouseButton(e)) {
+                    val selectedStocks = table.selectedRows.map { stockTableModel.tableData[it] }
                     StocksMenu(
                         deleteRequest = {
-                            stockTableModel.removeStock(it.code)
+                            stockTableModel.removeStocks(it.map { stock -> stock.code })
                         },
                         updateRequest = {
                             stockTableModel.updateStock(it)
                         },
-                        selectedStock
+                        selectedStocks
                     ).showAsRightButton(clickLocation)
 
                     return
@@ -186,10 +185,7 @@ class StockWindow : ToolWindowFactory {
         if (stockTableModel.tableData.isEmpty()) {
             stopRefreshStockData()
         } else {
-            if (fetcherJob?.isActive == true) {
-                return
-            }
-
+            fetcherJob?.cancel()
             fetcherJob = scope.launch {
                 while (isActive && stockTableModel.tableData.isNotEmpty()) {
                     doRefreshStockData(stockTableModel.tableData)

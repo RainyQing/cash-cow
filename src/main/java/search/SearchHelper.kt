@@ -103,8 +103,10 @@ class SearchHelper(
 
             add(contentPanel, BorderLayout.CENTER)
 
-            location = PropertiesComponent.getInstance().getSearchDialogLocation()
-                ?: Point((screenSize.width - width) / 2, screenSize.height / 3)
+//            location = PropertiesComponent.getInstance().getSearchDialogLocation()
+//                ?: Point((screenSize.width - width) / 2, screenSize.height / 3)
+
+            location = Point((screenSize.width - width) / 2, screenSize.height / 3)
 
             addWindowFocusListener(object : WindowFocusListener {
                 override fun windowGainedFocus(p0: WindowEvent?) {
@@ -257,7 +259,7 @@ class SearchHelper(
         if (!searchDialog.isVisible) {
             return
         }
-        PropertiesComponent.getInstance().saveSearchDialogLocation(searchDialog.location)
+//        PropertiesComponent.getInstance().saveSearchDialogLocation(searchDialog.location)
         searchDialog.isVisible = false
         searchField.text = ""
     }

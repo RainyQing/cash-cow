@@ -14,20 +14,25 @@ import kotlinx.coroutines.launch
 import java.awt.Point
 
 class StocksMenu(
-    private val deleteRequest: (Stock) -> Unit,
+    private val deleteRequest: (List<Stock>) -> Unit,
     private val updateRequest: (Stock) -> Unit,
-    private val selectedStock: Stock
+    private val selectedStocks: List<Stock>
 ) {
 
     @JvmOverloads
     fun showAsRightButton(
         location: Point,
-        title: String = "",
-        buttons: List<Menu> = listOf(
-            Menu.Delete,
-            Menu.Edit
-        )
+        title: String = ""
     ) {
+        val buttons = if (selectedStocks.size == 1) {
+            listOf(
+                Menu.Delete,
+                Menu.Edit
+            )
+        } else {
+            listOf(Menu.Delete)
+        }
+
         JBPopupFactory.getInstance().createListPopup(object : BaseListPopupStep<Menu>(title, buttons) {
             override fun onChosen(selectedValue: Menu?, finalChoice: Boolean): PopupStep<*>? {
                 if (finalChoice) {
@@ -52,15 +57,17 @@ class StocksMenu(
     private fun deleteStock() {
         val storage = PropertiesComponent.getInstance()
         val stocks = storage.getStockConfig().toMutableList()
-        if (stocks.removeIf { it.code == selectedStock.code }) {
-            storage.updateStockConfig(stocks)
-            deleteRequest.invoke(selectedStock)
-        }
+
+        stocks.removeAll { stock -> selectedStocks.any { it.code == stock.code } }
+        storage.updateStockConfig(stocks)
+        deleteRequest.invoke(selectedStocks)
     }
 
     private fun editStock(location: Point) {
+        val targetStock = selectedStocks.firstOrNull() ?: return
+
         AppScope.launch {
-            val stock = PropertiesComponent.getInstance().getStockConfig().find { it.code == selectedStock.code }
+            val stock = PropertiesComponent.getInstance().getStockConfig().find { it.code == targetStock.code }
             stock?.showEditBondsDialog(updateRequest, location)
         }
     }

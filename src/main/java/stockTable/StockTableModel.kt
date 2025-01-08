@@ -48,11 +48,13 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
         fireTableDataChanged()
     }
 
-    fun removeStock(stockCode: String) {
-        val rowIndex = tableData.indexOfFirst { it.code == stockCode }
-        if (rowIndex != -1) {
-            tableData.removeAt(rowIndex)
-            fireTableRowsDeleted(rowIndex, rowIndex)
+    fun removeStocks(stockCodes: List<String>) {
+        stockCodes.forEach { stockCode ->
+            val rowIndex = tableData.indexOfFirst { it.code == stockCode }
+            if (rowIndex != -1) {
+                tableData.removeAt(rowIndex)
+                fireTableRowsDeleted(rowIndex, rowIndex)
+            }
         }
     }
 }
