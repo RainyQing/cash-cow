@@ -1,11 +1,11 @@
 package stockTable
 
-import base.StockTableHeader
+import base.Config
 import bean.Stock
 import javax.swing.table.AbstractTableModel
 
 class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : AbstractTableModel() {
-    private val columnNames = StockTableHeader
+    private val columnNames = Config.stockTableHeader
 
     override fun getRowCount(): Int {
         return tableData.size

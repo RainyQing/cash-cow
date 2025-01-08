@@ -3,6 +3,7 @@ package base
 object SettingsKeys {
     const val stockConfig = "key_stocks"
     const val pinyinMode = "key_pinyin_mode"
+    const val colorful = "key_colorful"
 
     /**
      * , 分割的坐标

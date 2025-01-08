@@ -12,7 +12,16 @@
         <properties>
           <horizontalAlignment value="2"/>
           <horizontalTextPosition value="2"/>
-          <text value="启用拼音模式"/>
+          <text value="Pinyin Mode"/>
+          <toolTipText value="启用拼音模式, 暂未启用"/>
+        </properties>
+      </component>
+      <component id="e1918" class="javax.swing.JCheckBox" binding="colorfulModeCheckBox">
+        <constraints/>
+        <properties>
+          <horizontalAlignment value="2"/>
+          <horizontalTextPosition value="2"/>
+          <text value="Colorful"/>
           <toolTipText value="暂未启用"/>
         </properties>
       </component>

@@ -1,5 +1,5 @@
 import base.AppScope
-import base.StockTableHeader
+import base.Config
 import base.getStockConfig
 import bean.Stock
 import com.intellij.icons.AllIcons
@@ -21,7 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import popMenu.StocksMenu
 import search.SearchHelper
-import stockTable.StockRowRender
+import stockTable.StockCellRender
 import stockTable.StockTableModel
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
@@ -37,7 +37,6 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 import javax.swing.border.EmptyBorder
-import javax.swing.table.TableCellRenderer
 
 class StockWindow : ToolWindowFactory {
 
@@ -95,7 +94,7 @@ class StockWindow : ToolWindowFactory {
         }
 
         table = JBTable(stockTableModel)
-        table.setDefaultRenderer(Any::class.java, StockRowRender(stockTableModel))
+        table.setDefaultRenderer(Any::class.java, StockCellRender(stockTableModel))
 
         refreshTimeLabel = JLabel()
         refreshTimeLabel.toolTipText = "刷新时间"
@@ -125,7 +124,7 @@ class StockWindow : ToolWindowFactory {
 
         table.tableHeader.addMouseMotionListener(object : MouseMotionAdapter() {
             override fun mouseDragged(e: MouseEvent) {
-                StockTableHeader = (0 until table.columnCount).map { columnIdx ->
+                Config.stockTableHeader = (0 until table.columnCount).map { columnIdx ->
                     table.getColumnName(columnIdx)
                 }
             }

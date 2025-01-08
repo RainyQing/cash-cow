@@ -16,18 +16,60 @@ val storage: PropertiesComponent
 private const val defaultStockTableHeader =
     "编码,股票名称,涨跌,涨跌幅,最高价,最低价,当前价,成本价,持仓,收益率,收益,更新时间"
 
-var StockTableHeader: List<String> = emptyList()
-    get() {
-        if (field.isEmpty()) {
-            field = (storage.getValue(SettingsKeys.defaultStockTableHeader) ?: defaultStockTableHeader).split(',')
-                .map { it.trim() }
+object Config {
+    var fluctuationIdx = 2
+        private set
+    var fluctuationPercentIdx = 3
+        private set
+
+    var incomeIdx = 10
+        private set
+    var incomePercentIdx = 9
+        private set
+
+    var stockTableHeader: List<String> = emptyList()
+        get() {
+            if (field.isEmpty()) {
+                field = (storage.getValue(SettingsKeys.defaultStockTableHeader) ?: defaultStockTableHeader).split(',')
+                    .map { it.trim() }
+            }
+            return field
         }
-        return field
-    }
-    set(value) {
-        field = value
-        storage.setValue(SettingsKeys.defaultStockTableHeader, value.joinToString(","))
-    }
+        set(value) {
+            field = value
+            fluctuationIdx = value.indexOf("涨跌")
+            fluctuationPercentIdx = value.indexOf("涨跌幅")
+            incomeIdx = value.indexOf("收益")
+            incomePercentIdx = value.indexOf("收益率")
+            storage.setValue(SettingsKeys.defaultStockTableHeader, value.joinToString(","))
+        }
+
+    private var _pinyinMode: Boolean? = null
+    var pinyinMode: Boolean
+        get() {
+            if (_pinyinMode == null) {
+                _pinyinMode = storage.getBoolean(SettingsKeys.pinyinMode, false)
+            }
+            return _pinyinMode!!
+        }
+        set(value) {
+            _pinyinMode = value
+            storage.setValue(SettingsKeys.pinyinMode, value)
+        }
+
+    private var _colorful: Boolean? = null
+    var colorful: Boolean
+        get() {
+            if (_colorful == null) {
+                _colorful = storage.getBoolean(SettingsKeys.colorful, false)
+            }
+            return _colorful!!
+        }
+        set(value) {
+            _colorful = value
+            storage.setValue(SettingsKeys.colorful, value)
+        }
+}
 
 fun String.readAsStock(): Stock {
     if (isEmpty()) {
