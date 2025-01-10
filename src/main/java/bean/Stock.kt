@@ -10,69 +10,87 @@ private const val timePlacement = "$1:$2:$3"
 data class Stock(
     var code: String = "",
     var name: String = "",
-    var now: String = "",
+
+    var openPrice: String = "",
+    var latestPrice: String = "",
 
     /**
      * 当日涨跌
      */
     var change: String = "",
     var changePercent: String = "",
-    var time: String = "",
+
+    var updateTime: String = "",
+
     var buyOne: String = "",
     var sellOne: String = "",
 
     /**
      * 最高价
      */
-    var max: String = "",
+    var highestPrice: String = "",
 
     /**
      * 最低价
      */
-    var min: String = "",
+    var lowestPrice: String = "",
 
-    var costPrice: String = "--", //成本价
+    /**
+     * 成本价
+     */
+    var costPrice: String = "--",
 
     /**
      * 持仓
      */
-    var bonds: String = "--",
+    var own: String = "--",
 
-    var incomePercent: String = "", //收益率
-    var income: String = "", //收益
+    var incomePercent: String = "",
+    var income: String = "",
 ) {
 
+    /**
+     * 方法是计算收益，放在对应字段
+     *
+     */
     fun calculatePrice() {
-        if (costPrice.getNumber() != null
-            && bonds.getNumber() != null
-        ) {
-            val now = BigDecimal(now)
-            val costPriceDec = BigDecimal(costPrice)
-            val incomeDiff = now.add(costPriceDec.negate())
-            if (costPriceDec <= BigDecimal.ZERO) {
-                incomePercent = "0"
-            } else {
-                val incomePercentDec = incomeDiff.divide(costPriceDec, 5, RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.TEN)
-                    .multiply(BigDecimal.TEN)
-                    .setScale(3, RoundingMode.HALF_UP)
-                incomePercent = incomePercentDec.toString()
-            }
-
-            val bondDec = BigDecimal(bonds)
-            val incomeDec = incomeDiff.multiply(bondDec)
-                .setScale(2, RoundingMode.HALF_UP)
-            income = incomeDec.toString()
+        if (costPrice.getNumber() == null || own.getNumber() == null) {
+            return
         }
+
+        val latestPriceValue = BigDecimal(latestPrice).setScale(3, RoundingMode.HALF_UP)
+        val costPriceValue = BigDecimal(costPrice).setScale(3, RoundingMode.HALF_UP)
+        val incomePriceValue = latestPriceValue.subtract(costPriceValue)
+
+        if (incomePriceValue.compareTo(BigDecimal.ZERO) == 0) {
+            income = "0"
+            incomePercent = "0"
+            return
+        }
+
+        val ownValue = BigDecimal(own)
+        val incomeTotalValue = incomePriceValue.multiply(ownValue)
+
+        income = incomeTotalValue.setScale(2, RoundingMode.HALF_UP).toString()
+
+        if (costPriceValue.compareTo(BigDecimal.ZERO) == 0) {
+            incomePercent = "*"
+            return
+        }
+
+        val incomePercentValue = incomePriceValue.divide(costPriceValue, 5, RoundingMode.HALF_UP)
+            .multiply(BigDecimal("100"))
+            .setScale(3, RoundingMode.HALF_UP)
+
+        incomePercent = "$incomePercentValue%"
     }
 
-    fun getValueByColumn(columName: String?, colorful: Boolean = false): String {
+    fun getValueByColumn(columName: String?): String {
         return when (columName) {
             "编码" -> code
-            "股票名称" -> //                return colorful ? this.getName() : PinYinUtils.toPinYin(this.getName());
-                name
+            "股票名称" -> name
 
-            "当前价" -> now
+            "当前价" -> latestPrice
             "买一" -> buyOne
             "卖一" -> sellOne
             "涨跌" -> {
@@ -91,15 +109,15 @@ data class Stock(
                 } + "%"
             }
 
-            "最高价" -> max
-            "最低价" -> min
+            "最高价" -> highestPrice
+            "最低价" -> lowestPrice
             "成本价" -> costPrice
-            "持仓" -> bonds
-            "收益率" -> if (costPrice.getNumber() == null) "" else "$incomePercent%"
+            "持仓" -> own
+            "收益率" -> incomePercent
             "收益" -> income
             "更新时间" ->
                 try {
-                    time.substring(8).replace(srcTimerReg.toRegex(), timePlacement)
+                    updateTime.substring(8).replace(srcTimerReg.toRegex(), timePlacement)
                 } catch (e: Exception) {
                     "--"
                 }

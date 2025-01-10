@@ -82,7 +82,7 @@ fun String.readAsStock(): Stock {
             Stock(
                 code = array[0],
                 costPrice = array[1],
-                bonds = array[2]
+                own = array[2]
             )
         } else if (array.isNotEmpty()) {
             Stock(code = array[0])
@@ -157,6 +157,6 @@ fun PropertiesComponent.updateStockConfig(configs: List<Stock>) {
         return
     }
 
-    val configRaw = configs.joinToString(";") { "${it.code},${it.costPrice},${it.bonds}" }
+    val configRaw = configs.joinToString(";") { "${it.code},${it.costPrice},${it.own}" }
     setValue(SettingsKeys.stockConfig, configRaw)
 }

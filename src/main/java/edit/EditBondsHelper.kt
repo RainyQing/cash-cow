@@ -6,6 +6,8 @@ import base.saveHoldingDialogLocation
 import base.updateStockConfig
 import bean.Stock
 import com.intellij.ide.util.PropertiesComponent
+import utils.beautySmallNum
+import utils.getNumber
 import utils.isNumber
 import java.awt.BorderLayout
 import java.awt.FlowLayout
@@ -27,7 +29,7 @@ fun Stock.showEditBondsDialog(
 
     // 创建持仓输入框
     val holdingPanel = JPanel(FlowLayout(FlowLayout.LEFT))
-    val holdingTextField = JTextField(if (targetStock.bonds.isNumber()) targetStock.bonds else null, 10)
+    val holdingTextField = JTextField(if (targetStock.own.isNumber()) targetStock.own else null, 10)
     holdingPanel.add(JLabel("持仓:"))
     holdingPanel.add(holdingTextField)
     frame.add(holdingPanel)
@@ -51,7 +53,10 @@ fun Stock.showEditBondsDialog(
                 val followedStocks = storage.getStockConfig().toMutableList()
                 val idx = followedStocks.indexOfFirst { it.code == targetStock.code }
                 if (idx != -1) {
-                    val newStock = targetStock.copy(costPrice = cost, bonds = holding)
+                    val newStock = targetStock.copy(
+                        costPrice = cost.beautySmallNum(2),
+                        own = ((holding.getNumber()?.toInt() ?: 0) / 100 * 100).toString()
+                    )
                     newStock.calculatePrice()
 
                     followedStocks[idx] = newStock

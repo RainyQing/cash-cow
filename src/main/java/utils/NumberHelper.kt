@@ -6,8 +6,13 @@ import java.text.NumberFormat
 
 val numberRegex = """-?\d+(\.\d+)?""".toRegex()
 
-private val defaultNumberFormatter = NumberFormat.getNumberInstance().apply {
+private val digits3NumberFormatter = NumberFormat.getNumberInstance().apply {
     maximumFractionDigits = 3
+    roundingMode = RoundingMode.DOWN
+}
+
+private val digits2NumberFormatter = NumberFormat.getNumberInstance().apply {
+    maximumFractionDigits = 2
     roundingMode = RoundingMode.DOWN
 }
 
@@ -30,4 +35,22 @@ fun String.getNumber(): Double? {
     }
 }
 
-fun Number.beautySmallNum(): String = defaultNumberFormatter.format(BigDecimal(toString()))
+fun String.beautySmallNum(digits: Int = 2) = (getNumber() ?: 0).beautySmallNum(digits)
+
+fun Number.beautySmallNum(digits: Int = 2): String =
+    when (digits) {
+        2 -> {
+            digits2NumberFormatter
+        }
+
+        3 -> {
+            digits3NumberFormatter
+        }
+
+        else -> {
+            NumberFormat.getNumberInstance().apply {
+                maximumFractionDigits = digits
+                roundingMode = RoundingMode.DOWN
+            }
+        }
+    }.format(BigDecimal(toString()))

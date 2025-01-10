@@ -2,10 +2,7 @@ package handler
 
 import base.Urls
 import bean.Stock
-import utils.getNumber
 import utils.httpGet
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class TencentStockHandler() {
     suspend fun fetchStockData(stocks: List<Stock>?): List<Stock>? {
@@ -33,12 +30,18 @@ class TencentStockHandler() {
                 val values = dataStr.split("~".toRegex()).dropLastWhile { it.isEmpty() }
 
                 stock.name = values[1]
-                stock.now = values[3]
+                stock.latestPrice = values[3]
+
+                stock.openPrice = values[5]
+
+                stock.updateTime = values[30]
+
                 stock.change = values[31]
                 stock.changePercent = values[32]
-                stock.time = values[30]
-                stock.max = values[33]
-                stock.min = values[34]
+
+                stock.highestPrice = values[33]
+                stock.lowestPrice = values[34]
+
                 stock.buyOne = values[10]
                 stock.sellOne = values[20]
 

@@ -13,6 +13,7 @@ import com.intellij.ui.AnActionButton
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.table.JBTable
+import com.intellij.util.ui.JBUI
 import edit.showEditBondsDialog
 import handler.TencentStockHandler
 import kotlinx.coroutines.Job
@@ -36,7 +37,6 @@ import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
-import javax.swing.border.EmptyBorder
 
 class StockWindow : ToolWindowFactory {
 
@@ -98,7 +98,7 @@ class StockWindow : ToolWindowFactory {
 
         refreshTimeLabel = JLabel()
         refreshTimeLabel.toolTipText = "刷新时间"
-        refreshTimeLabel.border = EmptyBorder(0, 0, 0, 5)
+        refreshTimeLabel.border = JBUI.Borders.emptyRight(5)
 
         val refreshAction: AnActionButton = object : AnActionButton("停止刷新", AllIcons.Actions.Pause) {
             override fun actionPerformed(e: AnActionEvent) {
@@ -119,7 +119,7 @@ class StockWindow : ToolWindowFactory {
 
         val toolPanel = toolbarDecorator.createPanel()
         toolbarDecorator.actionsPanel.add(refreshTimeLabel, BorderLayout.EAST)
-        toolPanel.border = EmptyBorder(0, 0, 0, 0)
+        toolPanel.border = JBUI.Borders.empty()
         mPanel.add(toolPanel, BorderLayout.CENTER)
 
         table.tableHeader.addMouseMotionListener(object : MouseMotionAdapter() {
