@@ -13,8 +13,22 @@ private var followedStocks = listOf<Stock>()
 val storage: PropertiesComponent
     get() = PropertiesComponent.getInstance()
 
-private const val defaultStockTableHeader =
-    "编码,股票名称,涨跌,涨跌幅,最高价,最低价,当前价,成本价,持仓,收益率,收益,更新时间"
+private val defaultStockTableHeader = listOf(
+    "编码",
+    "股票",
+    "开盘",
+    "涨跌",
+    "涨跌幅",
+    "最高价",
+    "最低价",
+    "振幅",
+    "当前价",
+    "成本价",
+    "持仓",
+    "收益率",
+    "收益",
+    "更新时间"
+)
 
 object Config {
     var fluctuationIdx = 2
@@ -30,8 +44,14 @@ object Config {
     var stockTableHeader: List<String> = emptyList()
         get() {
             if (field.isEmpty()) {
-                field = (storage.getValue(SettingsKeys.defaultStockTableHeader) ?: defaultStockTableHeader).split(',')
-                    .map { it.trim() }
+                val saved = storage.getValue(SettingsKeys.defaultStockTableHeader, "")
+                if (saved.isNotEmpty()) {
+                    field = saved.split(',').map { it.trim() }
+                }
+
+                if (field.size < defaultStockTableHeader.size) {
+                    field = defaultStockTableHeader
+                }
             }
             return field
         }

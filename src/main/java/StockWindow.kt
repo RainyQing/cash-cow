@@ -93,9 +93,9 @@ class StockWindow : ToolWindowFactory {
             return
         }
 
-        table = JBTable(stockTableModel)
-        table.setDefaultRenderer(Any::class.java, StockCellRender(stockTableModel))
-
+        table = JBTable(stockTableModel).apply {
+            setDefaultRenderer(Any::class.java, StockCellRender(stockTableModel))
+        }
         refreshTimeLabel = JLabel()
         refreshTimeLabel.toolTipText = "刷新时间"
         refreshTimeLabel.border = JBUI.Borders.emptyRight(5)
@@ -129,6 +129,7 @@ class StockWindow : ToolWindowFactory {
                 }
             }
         })
+
         table.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(e: MouseEvent) {
                 val clickLocation = Point(e.xOnScreen, e.yOnScreen)

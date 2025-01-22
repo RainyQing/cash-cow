@@ -54,7 +54,7 @@ fun Stock.showEditBondsDialog(
                 val idx = followedStocks.indexOfFirst { it.code == targetStock.code }
                 if (idx != -1) {
                     val newStock = targetStock.copy(
-                        costPrice = cost.beautySmallNum(2),
+                        costPrice = cost.beautySmallNum(3),
                         own = ((holding.getNumber()?.toInt() ?: 0) / 100 * 100).toString()
                     )
                     newStock.calculatePrice()

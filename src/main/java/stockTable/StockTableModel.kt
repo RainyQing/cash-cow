@@ -2,6 +2,7 @@ package stockTable
 
 import base.Config
 import bean.Stock
+import utils.toPinYin
 import javax.swing.table.AbstractTableModel
 
 class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : AbstractTableModel() {
@@ -16,7 +17,7 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
     }
 
     override fun getColumnName(columnIndex: Int): String {
-        return columnNames[columnIndex]
+        return if (Config.pinyinMode) columnNames[columnIndex].toPinYin() else columnNames[columnIndex]
     }
 
     override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {

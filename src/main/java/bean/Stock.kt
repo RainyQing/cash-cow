@@ -1,6 +1,8 @@
 package bean
 
+import base.Config
 import utils.getNumber
+import utils.toPinYin
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -49,12 +51,27 @@ data class Stock(
     var income: String = "",
 ) {
 
+    fun clearHold(): Boolean {
+        if (costPrice.getNumber() == null || own.getNumber() == null) {
+            return false
+        }
+
+        costPrice = "--"
+        own = "--"
+
+        income = ""
+        incomePercent = ""
+        return true
+    }
+
     /**
      * 方法是计算收益，放在对应字段
      *
      */
     fun calculatePrice() {
         if (costPrice.getNumber() == null || own.getNumber() == null) {
+            income = ""
+            incomePercent = ""
             return
         }
 
@@ -88,7 +105,8 @@ data class Stock(
     fun getValueByColumn(columName: String?): String {
         return when (columName) {
             "编码" -> code
-            "股票名称" -> name
+            "股票" -> if (Config.pinyinMode) name.toPinYin() else name
+            "开盘" -> openPrice
 
             "当前价" -> latestPrice
             "买一" -> buyOne

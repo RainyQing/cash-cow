@@ -24,13 +24,11 @@ class StocksMenu(
         location: Point,
         title: String = ""
     ) {
-        val buttons = if (selectedStocks.size == 1) {
-            listOf(
-                Menu.Delete,
-                Menu.Edit
-            )
-        } else {
-            listOf(Menu.Delete)
+
+        val buttons = mutableListOf<Menu>(Menu.Delete)
+        if (selectedStocks.size == 1) {
+            buttons.add(Menu.Edit)
+            buttons.add(Menu.Clear)
         }
 
         JBPopupFactory.getInstance().createListPopup(object : BaseListPopupStep<Menu>(title, buttons) {
@@ -45,6 +43,10 @@ class StocksMenu(
                             editStock(location)
                         }
 
+                        Menu.Clear -> {
+                            clearHold()
+                        }
+
                         else -> {}
                     }
                 }
@@ -52,6 +54,21 @@ class StocksMenu(
                 return super.onChosen(selectedValue, finalChoice)
             }
         }).show(RelativePoint.fromScreen(location))
+    }
+
+    private fun clearHold() {
+        val targetStock = selectedStocks.first()
+        if (targetStock.clearHold()) {
+            val storage = PropertiesComponent.getInstance()
+            val stocks = storage.getStockConfig().toMutableList()
+
+            val idx = stocks.indexOfFirst { it.code == targetStock.code }
+            if (idx != -1) {
+                stocks[idx] = targetStock
+                storage.updateStockConfig(stocks)
+                updateRequest.invoke(targetStock)
+            }
+        }
     }
 
     private fun deleteStock() {
@@ -76,4 +93,5 @@ class StocksMenu(
 sealed class Menu {
     data object Delete : Menu()
     data object Edit : Menu()
+    data object Clear : Menu()
 }
