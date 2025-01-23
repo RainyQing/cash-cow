@@ -1,10 +1,7 @@
 package stockTable
 
 import base.Config
-import base.updateStockConfig
 import bean.Stock
-import com.intellij.ide.util.PropertiesComponent
-import utils.beautySmallNum
 import utils.toPinYin
 import javax.swing.table.AbstractTableModel
 
@@ -28,12 +25,14 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
     }
 
     override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-        return columnIndex == Config.ownIdx
-                || columnIndex == Config.costPriceIdx
+//        return columnIndex == Config.ownIdx
+//                || columnIndex == Config.costPriceIdx
+
+        return false
     }
 
     override fun setValueAt(newValue: Any, rowIndex: Int, columnIndex: Int) {
-        if (rowIndex !in tableData.indices) {
+        /*if (rowIndex !in tableData.indices) {
             return
         }
 
@@ -49,7 +48,7 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
         fireTableRowsUpdated(rowIndex, rowIndex)
 
         val storage = PropertiesComponent.getInstance()
-        storage.updateStockConfig(tableData)
+        storage.updateStockConfig(tableData)*/
     }
 
     fun addStock(stock: Stock) {

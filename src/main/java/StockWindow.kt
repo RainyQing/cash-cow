@@ -133,15 +133,13 @@ class StockWindow : ToolWindowFactory {
         table.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(e: MouseEvent) {
                 val clickLocation = Point(e.xOnScreen, e.yOnScreen)
-                /*if (e.clickCount == 2) {
+                if (e.clickCount == 2) {
                     val selectedStock = stockTableModel.tableData[table.selectedRow]
                     PropertiesComponent.getInstance()
                         .getStockConfig()
                         .find { it.code == selectedStock.code }
                         ?.showEditBondsDialog({ stockTableModel.updateStock(it) }, clickLocation)
-                } else */
-
-                if (SwingUtilities.isRightMouseButton(e)) {
+                } else if (SwingUtilities.isRightMouseButton(e)) {
                     val selectedStocks = table.selectedRows.map { stockTableModel.tableData[it] }
                     StocksMenu(
                         deleteRequest = {
