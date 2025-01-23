@@ -21,7 +21,7 @@ private val defaultStockTableHeader = listOf(
     "涨跌幅",
     "最高价",
     "最低价",
-    "振幅",
+//    "振幅",
     "当前价",
     "成本价",
     "持仓",
@@ -31,14 +31,18 @@ private val defaultStockTableHeader = listOf(
 )
 
 object Config {
-    var fluctuationIdx = 2
+    var fluctuationIdx = 0
         private set
-    var fluctuationPercentIdx = 3
+    var fluctuationPercentIdx = 0
         private set
 
-    var incomeIdx = 10
+    var ownIdx = 0
         private set
-    var incomePercentIdx = 9
+    var costPriceIdx = 0
+
+    var incomeIdx = 0
+        private set
+    var incomePercentIdx = 0
         private set
 
     var stockTableHeader: List<String> = emptyList()
@@ -52,17 +56,26 @@ object Config {
                 if (field.size < defaultStockTableHeader.size) {
                     field = defaultStockTableHeader
                 }
+                saveColumnIndex(field)
             }
             return field
         }
         set(value) {
             field = value
-            fluctuationIdx = value.indexOf("涨跌")
-            fluctuationPercentIdx = value.indexOf("涨跌幅")
-            incomeIdx = value.indexOf("收益")
-            incomePercentIdx = value.indexOf("收益率")
+            saveColumnIndex(value)
             storage.setValue(SettingsKeys.defaultStockTableHeader, value.joinToString(","))
         }
+
+    private fun saveColumnIndex(value: List<String>) {
+        fluctuationIdx = value.indexOf("涨跌")
+        fluctuationPercentIdx = value.indexOf("涨跌幅")
+
+        ownIdx = value.indexOf("持仓")
+        costPriceIdx = value.indexOf("成本价")
+
+        incomeIdx = value.indexOf("收益")
+        incomePercentIdx = value.indexOf("收益率")
+    }
 
     private var _pinyinMode: Boolean? = null
     var pinyinMode: Boolean

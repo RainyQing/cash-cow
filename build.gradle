@@ -32,9 +32,7 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-//    version = '2024.2.3'
-    localPath = '/Applications/IntelliJ IDEA CE.app/Contents/'
-//    localPath.set('D:\\tool\\dev\\IntelliJ IDEA')
+    version = '2024.3.2'
     intellij.setUpdateSinceUntilBuild(true)
     intellij.setSameSinceUntilBuild(false)
 }
