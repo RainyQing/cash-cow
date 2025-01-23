@@ -195,6 +195,8 @@ class SearchHelper(
         if (stock == null || stock.followed) {
             return
         }
+        stock.followed = true
+        searchDialog.revalidate()
 
         val addedStock = Stock(code = stock.code, name = stock.name)
         val configStocks = followedStocks.toMutableList()
@@ -239,8 +241,17 @@ class SearchHelper(
             return
         }
 
-        result.stock.forEach { searchItem -> searchItem.followed = followedStocks.any { searchItem.code == it.code } }
-        resultList.setListData(result.stock.toTypedArray())
+        val allStockOrFundList = mutableListOf<SearchedStock>()
+        result.stock?.let {
+            allStockOrFundList.addAll(it)
+        }
+
+        result.fund?.let {
+            allStockOrFundList.addAll(it)
+        }
+
+        allStockOrFundList.forEach { searchItem -> searchItem.followed = followedStocks.any { searchItem.code == it.code } }
+        resultList.setListData(allStockOrFundList.toTypedArray())
         resultScrollPane.isVisible = true
         searchDialog.setSize(dialogWidth, dialogMaxHeight)
         searchDialog.revalidate()

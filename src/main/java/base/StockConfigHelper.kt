@@ -15,7 +15,7 @@ val storage: PropertiesComponent
 
 private val defaultStockTableHeader = listOf(
     "编码",
-    "股票",
+    "名称",
     "开盘",
     "涨跌",
     "涨跌幅",

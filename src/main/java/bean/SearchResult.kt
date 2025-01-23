@@ -1,7 +1,9 @@
 package bean
 
 data class SearchResult(
-    val stock: List<SearchedStock>
+    val stock: List<SearchedStock>?,
+
+    val fund: List<SearchedStock>?,
 )
 
 data class SearchedStock(

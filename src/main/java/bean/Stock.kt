@@ -134,9 +134,16 @@ data class Stock(
             "收益率" -> incomePercent
             "收益" -> income
             "更新时间" ->
+//                for sh/sz 20250123155914
+//                for hk 2025/01/23 16:08:09
                 try {
-                    updateTime.substring(8).replace(srcTimerReg.toRegex(), timePlacement)
+                    if (code.startsWith("hk")) {
+                        updateTime.takeLast(8)
+                    } else {
+                        updateTime.substring(8)
+                    }.replace(srcTimerReg.toRegex(), timePlacement)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     "--"
                 }
 

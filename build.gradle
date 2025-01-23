@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.leeks.bobo'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
     mavenCentral()
@@ -38,7 +38,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes.set("""
-        v1.0 韭皇驾到，通通闪开
+        韭皇驾到，通通闪开
               """)
     sinceBuild.set('233.*')
     untilBuild.set(null)
