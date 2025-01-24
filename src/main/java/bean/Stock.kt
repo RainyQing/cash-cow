@@ -105,7 +105,9 @@ data class Stock(
     fun getValueByColumn(columName: String?): String {
         return when (columName) {
             "编码" -> code
-            "名称" -> if (Config.pinyinMode) name.toPinYin() else name
+            "名称",
+            "股票" -> if (Config.pinyinMode) name.toPinYin() else name
+
             "开盘" -> openPrice
 
             "当前价" -> latestPrice
