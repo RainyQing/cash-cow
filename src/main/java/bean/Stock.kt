@@ -105,7 +105,7 @@ data class Stock(
     fun getValueByColumn(columName: String?): String {
         return when (columName) {
             "编码" -> code
-            "股票" -> if (Config.pinyinMode) name.toPinYin() else name
+            "名称" -> if (Config.pinyinMode) name.toPinYin() else name
             "开盘" -> openPrice
 
             "当前价" -> latestPrice
@@ -136,15 +136,19 @@ data class Stock(
             "更新时间" ->
 //                for sh/sz 20250123155914
 //                for hk 2025/01/23 16:08:09
-                try {
-                    if (code.startsWith("hk")) {
-                        updateTime.takeLast(8)
-                    } else {
-                        updateTime.substring(8)
-                    }.replace(srcTimerReg.toRegex(), timePlacement)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                if (updateTime.length < 8) {
                     "--"
+                } else {
+                    try {
+                        if (code.startsWith("hk")) {
+                            updateTime.takeLast(8)
+                        } else {
+                            updateTime.substring(8)
+                        }.replace(srcTimerReg.toRegex(), timePlacement)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        "--"
+                    }
                 }
 
             else -> ""

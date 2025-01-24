@@ -1,7 +1,9 @@
 package stockTable
 
 import base.Config
+import base.updateStockConfig
 import bean.Stock
+import com.intellij.ide.util.PropertiesComponent
 import utils.toPinYin
 import javax.swing.table.AbstractTableModel
 
@@ -32,23 +34,41 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
     }
 
     override fun setValueAt(newValue: Any, rowIndex: Int, columnIndex: Int) {
-        /*if (rowIndex !in tableData.indices) {
-            return
-        }
+//        if (rowIndex !in tableData.indices) {
+//            return
+//        }
+//
+//        val targetStock = tableData[rowIndex]
+//
+//        if (columnIndex == Config.ownIdx) {
+//            targetStock.own = newValue.toString().beautySmallNum(3)
+//        } else if (columnIndex == Config.costPriceIdx) {
+//            targetStock.costPrice = newValue.toString().beautySmallNum(3)
+//        }
+//
+//        targetStock.calculatePrice()
+//        fireTableRowsUpdated(rowIndex, rowIndex)
+//
+//        val storage = PropertiesComponent.getInstance()
+//        storage.updateStockConfig(tableData)
+    }
 
-        val targetStock = tableData[rowIndex]
+    /**
+     * 将两个数据行交换位置
+     */
+    fun exchangeStockRow(stockCodeA: String, stockCodeB: String) {
+        println("exchange A=$stockCodeA, B=$stockCodeB")
+        val stockA = tableData.find { it.code == stockCodeA }?.copy() ?: return
+        val stockB = tableData.find { it.code == stockCodeB }?.copy() ?: return
 
-        if (columnIndex == Config.ownIdx) {
-            targetStock.own = newValue.toString().beautySmallNum(3)
-        } else if (columnIndex == Config.costPriceIdx) {
-            targetStock.costPrice = newValue.toString().beautySmallNum(3)
-        }
+        val idxA = tableData.indexOf(stockA)
+        val idxB = tableData.indexOf(stockB)
 
-        targetStock.calculatePrice()
-        fireTableRowsUpdated(rowIndex, rowIndex)
+        resetStockInRow(idxA, stockB)
+        resetStockInRow(idxB, stockA)
 
         val storage = PropertiesComponent.getInstance()
-        storage.updateStockConfig(tableData)*/
+        storage.updateStockConfig(tableData)
     }
 
     fun addStock(stock: Stock) {
@@ -61,6 +81,21 @@ class StockTableModel(val tableData: MutableList<Stock> = mutableListOf()) : Abs
         if (rowIndex != -1) {
             tableData[rowIndex] = stock
             fireTableRowsUpdated(rowIndex, rowIndex)
+        }
+    }
+
+    fun resetStockInRow(rowIdx: Int, stock: Stock) {
+        if (rowIdx in tableData.indices) {
+            tableData[rowIdx] = stock
+            fireTableRowsUpdated(rowIdx, rowIdx)
+            return
+        }
+
+        if (!tableData.any { it.code == stock.code }) {
+            tableData.add(stock)
+            val idx = tableData.lastIndex
+            fireTableRowsInserted(idx, idx)
+            return
         }
     }
 

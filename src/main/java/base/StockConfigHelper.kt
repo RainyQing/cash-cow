@@ -31,6 +31,8 @@ private val defaultStockTableHeader = listOf(
 )
 
 object Config {
+    var codeIdx = 0
+
     var fluctuationIdx = 0
         private set
     var fluctuationPercentIdx = 0
@@ -67,6 +69,8 @@ object Config {
         }
 
     private fun saveColumnIndex(value: List<String>) {
+        codeIdx = value.indexOf("编码")
+
         fluctuationIdx = value.indexOf("涨跌")
         fluctuationPercentIdx = value.indexOf("涨跌幅")
 

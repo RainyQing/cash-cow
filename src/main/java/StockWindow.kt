@@ -24,6 +24,7 @@ import popMenu.StocksMenu
 import search.SearchHelper
 import stockTable.StockCellRender
 import stockTable.StockTableModel
+import stockTable.StockTransferHandler
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
 import java.awt.Point
@@ -34,10 +35,7 @@ import java.awt.event.MouseMotionAdapter
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.SwingUtilities
-import javax.swing.event.TableModelEvent
+import javax.swing.*
 
 class StockWindow : ToolWindowFactory {
 
@@ -46,7 +44,7 @@ class StockWindow : ToolWindowFactory {
      */
     lateinit var mPanel: JPanel
 
-    private lateinit var table: JBTable
+    private lateinit var table: JTable
     private lateinit var refreshTimeLabel: JLabel
 
     private val scope = AppScope
@@ -96,6 +94,10 @@ class StockWindow : ToolWindowFactory {
 
         table = JBTable(stockTableModel).apply {
             setDefaultRenderer(Any::class.java, StockCellRender(stockTableModel))
+
+            dragEnabled = true
+            dropMode = DropMode.USE_SELECTION
+            transferHandler = StockTransferHandler(stockTableModel)
         }
         refreshTimeLabel = JLabel()
         refreshTimeLabel.toolTipText = "刷新时间"
